@@ -1,8 +1,6 @@
 name: factory_stockapp CI
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     types: [ closed ]
     branches: [ master ]
@@ -63,6 +61,7 @@ jobs:
           name: lint-artifact
           path: app/build/reports/*.html
         if: success()
+
       - name: Code Style Check
         run: ./gradlew checkstyle
 
@@ -95,7 +94,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: build app version check
-        if: ${{ github.event_name == 'push' && github.ref_name == 'dev' && success()}}
         id: appVersion
         uses: Devofure/version-reader-action@v1.0.0
 
@@ -118,11 +116,12 @@ jobs:
           version-name: '${{ env.NEW_VERSION_NAME }}'
           print-file: true
 
-      - name: git commit
-        run: git commit -m "version update V${{env.NEW_VERSION_NAME}} ci skip"
-
-      - name: git push
-        run: git push origin master
+      - name: git commit and push
+        run: |
+          git config --global user.email "jhpark3@yookgak.com"
+          git config --global user.name "JuhyeonPark3"
+          git commit -m "version update V${{env.NEW_VERSION_NAME}} ci skip"
+          git push origin master
 
 
 
