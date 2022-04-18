@@ -108,6 +108,7 @@ jobs:
         run: |
           echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$(($PATCH_VERSION + 1)) >> $GITHUB_ENV
+          echo ${{ github.actor }}
 
       - name: update gradle version for android
         uses: damienaicheh/update-android-version-gradle-action@v1.0.0
@@ -118,13 +119,14 @@ jobs:
           print-file: true
 
       - name: git commit and push
-        run: |
-          git add --all
-          git diff
-          git config --local user.email
-          git config --local user.name "JuhyeonPark3"
-          git commit -m "version update V${{env.NEW_VERSION_NAME}} ci skip"
-          git push
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          email: ${{ github.actor }}@users.noreply.github.com
+          name: ${{ github.actor }}
+          access_token: ${{ secrets.ACCESS_TOKEN }}
+          commit_message: V${{ env.NEW_VERSION_NAME }} ci skip
+
+
 
 
 
