@@ -118,10 +118,12 @@ jobs:
 
       - name: git commit and push
         run: |
-          git config --global user.email "jhpark3@yookgak.com"
-          git config --global user.name "JuhyeonPark3"
+          git add .
+          git diff
+          git config --local user.email
+          git config --local user.name "JuhyeonPark3"
           git commit -m "version update V${{env.NEW_VERSION_NAME}} ci skip"
-          git push origin master
+          git push
 
 
 
