@@ -32,28 +32,6 @@ jobs:
       - name: Build APK
         run: ./gradlew assemblefactory --stacktrace
 
-      - name: Build fail
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const ref = "${{github.ref}}"
-            const pull_number = Number(ref.split("/")[2])
-
-            await github.pulls.createReview({
-              ...context.repo,
-              pull_number,
-              body: "빌드 에러"
-              event: "REQUEST_CHANGES"
-            })
-
-            await github.pulls.update({
-              ...context.repo,
-              pull_number,
-              state: "closed"
-            })
-        if: ${{ github.event_name == 'pull_request' && failure()}}
-
       - name: Build Complete
         run: echo "Build complete"
   code-check:
