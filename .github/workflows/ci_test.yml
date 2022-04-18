@@ -30,7 +30,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build APK
-        run: ./gradlew assemblefactory --stacktrace
+        run: ./gradlew assembledebug --stacktrace
 
       - name: Build Complete
         run: echo "Build complete"
