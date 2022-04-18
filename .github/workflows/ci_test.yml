@@ -70,6 +70,7 @@ jobs:
         with:
           name: checkstyle-artifact
           path: app/build/reports/checkstyle/*.html
+        if: success()
 
   apk-version-update:
     needs: code-check
@@ -118,7 +119,7 @@ jobs:
 
       - name: git commit and push
         run: |
-          git add .
+          git add --all
           git diff
           git config --local user.email
           git config --local user.name "JuhyeonPark3"
