@@ -58,3 +58,16 @@ jobs:
           name: ${{ github.actor }}
           access_token: ${{ secrets.ACCESS_TOKEN }}
           commit_message: V${{ env.NEW_VERSION_NAME }} ci skip
+
+      - name: Build APK
+        run: ./gradlew assembledebug --stacktrace
+
+      - name: apk name change
+        run: mv app/build/output/apk/debug/app-debug.apk app/build/output/apk/debug/${{ env.NEW_VERSION_NAME }}.apk
+
+      - name: APK File Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.NEW_VERSION_NAME }}
+          path: app/build/output/apk/factory/debug/*.apk
+        if: success()
