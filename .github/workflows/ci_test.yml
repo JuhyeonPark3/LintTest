@@ -33,7 +33,7 @@ jobs:
       - name: Build Complete
         run: echo "Build complete"
   code-check:
-    needs: build
+    needs: build-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
