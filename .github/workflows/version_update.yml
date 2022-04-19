@@ -7,9 +7,7 @@ on:
 
 jobs:
   apk-version-update:
-    if: ${{ github.event.pull_request.merged
-      && !contains(github.event.head_commit.message, '[ci skip]')
-      && !contains(github.event.head_commit.message, '[skip ci]')}}
+    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -63,11 +61,14 @@ jobs:
         run: ./gradlew assembledebug --stacktrace
 
       - name: apk name change
-        run: mv app/build/output/apk/debug/app-debug.apk app/build/output/apk/debug/${{ env.NEW_VERSION_NAME }}.apk
+        run: |
+          cd app/build/outputs/apk/debug/
+          mv app-debug.apk ${{ env.NEW_VERSION_NAME }}.apk
+          ls
 
       - name: APK File Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.NEW_VERSION_NAME }}
-          path: app/build/output/apk/factory/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
         if: success()
