@@ -3,4 +3,6 @@
     <issue id="NestedScrolling" severity="ignore"/>
     <issue id="HardcodedText" severity="ignore"/>
     <issue id="SpUsage" severity="ignore"/>
+    <issue id="GradleDependency" severity="ignore"/>
+    <issue id="GradleDynamicVersion" severity="ignore"/>
 </lint>
