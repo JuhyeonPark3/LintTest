@@ -33,7 +33,9 @@ jobs:
         run: ./gradlew assembledebug --stacktrace
       - name: test
         run: |
+          cd app/build/output/apk/debug/
           ls
+          mv app-debug 1.1.1
 
 
 #      - name: Build Complete
