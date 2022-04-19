@@ -36,6 +36,7 @@ jobs:
           cd app/build/outputs/apk/debug/
           ls
           mv app-debug.apk 1.1.1.apk
+          ls
 
 #      - name: Build Complete
 #        run: echo "Build complete"
