@@ -30,7 +30,9 @@ jobs:
         uses: Devofure/version-reader-action@v1.0.0
 
       - name: get commit message
-        run: echo COMMIT_MESSAGE=$(git log --no-merges -1 --oneline) >> $GITHUB_ENV
+        run: |
+          echo $(git log -1 --oneline --pretty=format:%s)
+          echo COMMIT_MESSAGE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
 
       - name: commit message
         run: echo ${{ env.COMMIT_MESSAGE }}
