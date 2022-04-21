@@ -32,7 +32,7 @@ jobs:
       - name: get commit message
         run: echo COMMIT_MESSAGE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
 
-      - name: commit message
+      - name: view commit message
         run: echo ${{ env.COMMIT_MESSAGE }}
 
       - name: Register app version environment variable and update major version
@@ -58,7 +58,7 @@ jobs:
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update patch version
-        if: ${{ !contains(env.COMMIT_MESSAGE, '[major, minor, patch]') }}
+        if: ${{ !contains(env.COMMIT_MESSAGE, '[major, minor]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
