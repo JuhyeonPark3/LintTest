@@ -30,7 +30,7 @@ jobs:
         uses: Devofure/version-reader-action@v1.0.0
 
       - name: Register app version environment variable and update major version
-        if: ${{ contains(github.event.head_commit.message, '[major update]') }}
+        if: ${{ contains(github.event.head_commit.message, '[major]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -41,7 +41,7 @@ jobs:
           echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update minor version
-        if: ${{ contains(github.event.head_commit.message, '[minor update]') }}
+        if: ${{ contains(github.event.head_commit.message, '[minor]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -52,7 +52,7 @@ jobs:
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update patch version
-        if: ${{ contains(github.event.head_commit.message, '[patch update]') }}
+        if: ${{ contains(github.event.head_commit.message, '[patch]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
