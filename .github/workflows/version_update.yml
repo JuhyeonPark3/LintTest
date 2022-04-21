@@ -36,7 +36,7 @@ jobs:
         run: echo ${{ env.COMMIT_MESSAGE }}
 
       - name: Register app version environment variable and update major version
-        if: ${{ contains(env.COMMIT_MESSAGE, '[major]') }}
+        if: contains('${{env.COMMIT_MESSAGE}}', 'major')
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -47,7 +47,7 @@ jobs:
           echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update minor version
-        if: ${{ contains(env.COMMIT_MESSAGE, '[minor]') }}
+        if: contains('${{env.COMMIT_MESSAGE}}', 'minor')
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -58,7 +58,7 @@ jobs:
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update patch version
-        if: ${{ contains(env.COMMIT_MESSAGE, '[patch]') }}
+        if: contains('${{env.COMMIT_MESSAGE}}', 'patch')
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
