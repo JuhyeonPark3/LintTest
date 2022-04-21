@@ -58,7 +58,9 @@ jobs:
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update patch version
-        if: ${{ !contains(env.COMMIT_MESSAGE, '[major], [minor]') }}
+        if: >-
+          ${{ !contains(env.COMMIT_MESSAGE, 'major') &&
+          !contains(env.COMMIT_MESSAGE, 'minor')}}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
