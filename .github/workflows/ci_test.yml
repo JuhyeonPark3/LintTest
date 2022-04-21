@@ -2,7 +2,7 @@ name: factory_stockapp CI
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ dev ]
 
 jobs:
   build-test:
