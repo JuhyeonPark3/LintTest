@@ -30,15 +30,13 @@ jobs:
         uses: Devofure/version-reader-action@v1.0.0
 
       - name: get commit message
-        run: |
-          echo $(git log -1 --oneline --pretty=format:%s)
-          echo COMMIT_MESSAGE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
+        run: echo COMMIT_MESSAGE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
 
       - name: commit message
         run: echo ${{ env.COMMIT_MESSAGE }}
 
       - name: Register app version environment variable and update major version
-        if: ${{ contains(github.event.head_commit.message, '[major]') }}
+        if: ${{ contains(env.COMMIT_MESSAGE, '[major]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -49,7 +47,7 @@ jobs:
           echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update minor version
-        if: ${{ contains(github.event.head_commit.message, '[minor]') }}
+        if: ${{ contains(env.COMMIT_MESSAGE, '[minor]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -60,7 +58,7 @@ jobs:
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update patch version
-        if: ${{ contains(github.event.head_commit.message, '[patch]') }}
+        if: ${{ contains(env.COMMIT_MESSAGE, '[patch]') }}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
