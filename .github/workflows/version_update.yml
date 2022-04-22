@@ -111,16 +111,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "V${{ env.NEW_VERSION_NAME }} ",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "업데이트 내역 : test"
-                  }
-                }
-              ]
+              "text": "V${{ env.NEW_VERSION_NAME }} \n ${{ env.COMMIT_MESSAGE_BODY}} "
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
