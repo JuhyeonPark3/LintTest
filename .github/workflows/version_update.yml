@@ -101,3 +101,14 @@ jobs:
           name: ${{ env.NEW_VERSION_NAME }}
           path: app/build/outputs/apk/debug/*.apk
         if: success()
+
+      - name: slack send massage
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "text": "업데이트 ${{ env.NEW_VERSION_NAME }} "
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
