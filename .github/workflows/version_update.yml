@@ -35,7 +35,9 @@ jobs:
           echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) >> $GITHUB_ENV
 
       - name: view commit message
-        run: echo ${{ env.COMMIT_MESSAGE_TITLE }}
+        run: |
+          echo ${{ env.COMMIT_MESSAGE_TITLE }}
+          echo ${{ env.COMMIT_MESSAGE_BODY }}
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
@@ -115,7 +117,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "업데이트 내역 : ${{ env.COMMIT_MESSAGE_BODY }}
+                    "text": "업데이트 내역 : ${{ env.COMMIT_MESSAGE_BODY }}"
                   }
                 }
               ]
