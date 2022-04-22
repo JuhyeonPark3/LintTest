@@ -30,13 +30,15 @@ jobs:
         uses: Devofure/version-reader-action@v1.0.0
 
       - name: get commit message
-        run: echo COMMIT_MESSAGE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
+        run: |
+          echo COMMIT_MESSAGE_TITLE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
+          echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) >> $GITHUB_ENV
 
       - name: view commit message
-        run: echo ${{ env.COMMIT_MESSAGE }}
+        run: echo ${{ env.COMMIT_MESSAGE_TITLE }}
 
       - name: Register app version environment variable and update major version
-        if: contains(env.COMMIT_MESSAGE, 'major')
+        if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -47,7 +49,7 @@ jobs:
           echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
 
       - name: Register app version environment variable and update minor version
-        if: contains(env.COMMIT_MESSAGE, 'minor')
+        if: contains(env.COMMIT_MESSAGE_TITLE, 'minor')
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -59,8 +61,8 @@ jobs:
 
       - name: Register app version environment variable and update patch version
         if: >-
-          ${{ !contains(env.COMMIT_MESSAGE, 'major') &&
-          !contains(env.COMMIT_MESSAGE, 'minor')}}
+          ${{ !contains(env.COMMIT_MESSAGE_TITLE, 'major') &&
+          !contains(env.COMMIT_MESSAGE_TITLE, 'minor')}}
         env:
           VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
           MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
@@ -107,7 +109,16 @@ jobs:
         with:
           payload: |
             {
-              "text": "업데이트 ${{ env.NEW_VERSION_NAME }} "
+              "text": "V${{ env.NEW_VERSION_NAME }} ",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "업데이트 내역 : ${{ env.COMMIT_MESSAGE_BODY }}
+                  }
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
