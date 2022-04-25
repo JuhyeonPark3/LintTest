@@ -74,53 +74,44 @@ jobs:
           echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
           echo NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$(($PATCH_VERSION + 1)) >> $GITHUB_ENV
 
-      - name: update gradle version for android
-        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
-        with:
-          build-gradle-path: 'app/build.gradle'
-          version-code: ${{ env.NEW_VERSION_CODE }}
-          version-name: '${{ env.NEW_VERSION_NAME }}'
-          print-file: true
-
-      - name: git commit and push
-        uses: GuillaumeFalourd/git-commit-push@v1.3
-        with:
-          email: ${{ github.actor }}@users.noreply.github.com
-          name: ${{ github.actor }}
-          access_token: ${{ secrets.ACCESS_TOKEN }}
-          commit_message: V${{ env.NEW_VERSION_NAME }} ci skip
-
-      - name: Build APK
-        run: ./gradlew assembledebug --stacktrace
-
-      - name: apk name change
-        run: |
-          cd app/build/outputs/apk/debug/
-          mv app-debug.apk ${{ env.NEW_VERSION_NAME }}.apk
-          ls
-
-      - name: APK File Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.NEW_VERSION_NAME }}
-          path: app/build/outputs/apk/debug/*.apk
-        if: success()
+#      - name: update gradle version for android
+#        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
+#        with:
+#          build-gradle-path: 'app/build.gradle'
+#          version-code: ${{ env.NEW_VERSION_CODE }}
+#          version-name: '${{ env.NEW_VERSION_NAME }}'
+#          print-file: true
+#
+#      - name: git commit and push
+#        uses: GuillaumeFalourd/git-commit-push@v1.3
+#        with:
+#          email: ${{ github.actor }}@users.noreply.github.com
+#          name: ${{ github.actor }}
+#          access_token: ${{ secrets.ACCESS_TOKEN }}
+#          commit_message: V${{ env.NEW_VERSION_NAME }} ci skip
+#
+#      - name: Build APK
+#        run: ./gradlew assembledebug --stacktrace
+#
+#      - name: apk name change
+#        run: |
+#          cd app/build/outputs/apk/debug/
+#          mv app-debug.apk ${{ env.NEW_VERSION_NAME }}.apk
+#          ls
+#
+#      - name: APK File Upload Artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ env.NEW_VERSION_NAME }}
+#          path: app/build/outputs/apk/debug/*.apk
+#        if: success()
 
       - name: slack send massage
         uses: slackapi/slack-github-action@v1.18.0
         with:
           payload: |
             {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }}"
-              "blocks" : [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "${{ env.COMMIT_MESSAGE_BODY }}"
-                  }
-                }
-              ]
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
