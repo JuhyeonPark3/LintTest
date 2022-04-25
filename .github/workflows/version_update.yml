@@ -112,11 +112,15 @@ jobs:
           payload: |
             {
               "text": "${{ env.COMMIT_MESSAGE_TITLE }}"
-              "response_metadata" : {
-                "messages": [
-                  "${{ env.COMMIT_MESSAGE_BODY }}"
-                ]
-              }
+              "blocks" : [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "${{ env.COMMIT_MESSAGE_BODY }}"
+                  }
+                }
+              ]
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
