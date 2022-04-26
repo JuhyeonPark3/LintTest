@@ -109,9 +109,10 @@ jobs:
       - name: slack send massage
         uses: slackapi/slack-github-action@v1.18.0
         with:
-          payload: |-
+          payload: |
             {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
+              "text": >
+                "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
