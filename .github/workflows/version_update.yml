@@ -37,49 +37,53 @@ jobs:
       - name: view commit message
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
-          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g"
+          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed 's/-/\n-/g'
 
-      - name: commit update
-        id: commitMessage
+      - name: slack send massage
+        uses: slackapi/slack-github-action@v1.18.0
+        with:
+          payload: |
+            {
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n $(($env.COMMIT_MESSAGE_BODY | sed 's/-/\n-/g'))"
+            }
         env:
-          MESSAGE_BODY: $(echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g")
-        run: |
-          echo NEW_MESSAGE_BODY=$MESSAGE_BODY >> $GITHUB_ENV
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-      - name: Register app version environment variable and update major version
-        if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
-        env:
-          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
-          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
-          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
-          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
-        run: |
-          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
-          echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
-
-      - name: Register app version environment variable and update minor version
-        if: contains(env.COMMIT_MESSAGE_TITLE, 'minor')
-        env:
-          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
-          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
-          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
-          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
-        run: |
-          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
-          echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
-
-      - name: Register app version environment variable and update patch version
-        if: >-
-          ${{ !contains(env.COMMIT_MESSAGE_TITLE, 'major') &&
-          !contains(env.COMMIT_MESSAGE_TITLE, 'minor')}}
-        env:
-          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
-          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
-          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
-          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
-        run: |
-          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
-          echo NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$(($PATCH_VERSION + 1)) >> $GITHUB_ENV
+#      - name: Register app version environment variable and update major version
+#        if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
+#        env:
+#          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
+#          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
+#          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
+#          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
+#        run: |
+#          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
+#          echo NEW_VERSION_NAME=$(($MAJOR_VERSION + 1)).0.0 >> $GITHUB_ENV
+#
+#      - name: Register app version environment variable and update minor version
+#        if: contains(env.COMMIT_MESSAGE_TITLE, 'minor')
+#        env:
+#          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
+#          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
+#          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
+#          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
+#        run: |
+#          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
+#          echo NEW_VERSION_NAME=$MAJOR_VERSION.$(($MINOR_VERSION + 1)).0 >> $GITHUB_ENV
+#
+#      - name: Register app version environment variable and update patch version
+#        if: >-
+#          ${{ !contains(env.COMMIT_MESSAGE_TITLE, 'major') &&
+#          !contains(env.COMMIT_MESSAGE_TITLE, 'minor')}}
+#        env:
+#          VERSION_CODE: ${{ steps.appVersion.outputs.versionCode }}
+#          MAJOR_VERSION: ${{ steps.appVersion.outputs.majorVersion }}
+#          MINOR_VERSION: ${{ steps.appVersion.outputs.minorVersion }}
+#          PATCH_VERSION: ${{ steps.appVersion.outputs.patchVersion }}
+#        run: |
+#          echo NEW_VERSION_CODE=$(($VERSION_CODE+1)) >> $GITHUB_ENV
+#          echo NEW_VERSION_NAME=$MAJOR_VERSION.$MINOR_VERSION.$(($PATCH_VERSION + 1)) >> $GITHUB_ENV
 
 #      - name: update gradle version for android
 #        uses: damienaicheh/update-android-version-gradle-action@v1.0.0
@@ -113,13 +117,3 @@ jobs:
 #          path: app/build/outputs/apk/debug/*.apk
 #        if: success()
 
-      - name: slack send massage
-        uses: slackapi/slack-github-action@v1.18.0
-        with:
-          payload: |
-            {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.NEW_MESSAGE_BODY }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
