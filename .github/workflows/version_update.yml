@@ -37,11 +37,7 @@ jobs:
       - name: view commit message
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
-          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed -e "s/-/\\n-/g"
-
-      - name: commit
-        run: |
-          echo ${{ env.COMMIT_MESSAGE }}
+          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed -i "s/-/\n-/g"
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
@@ -115,7 +111,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE }}"
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY | sed -e "s/-/\n-/g }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
