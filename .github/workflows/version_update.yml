@@ -44,7 +44,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ ${{ env.COMMIT_MESSAGE_BODY }} | sed 's/-/\n-/g' }}"
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n $( ${{ env.COMMIT_MESSAGE_BODY }} | sed 's/-/\n-/g' )"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
