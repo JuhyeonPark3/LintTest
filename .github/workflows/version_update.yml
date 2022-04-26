@@ -32,11 +32,12 @@ jobs:
       - name: get commit message
         run: |
           echo COMMIT_MESSAGE_TITLE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
-          echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) | tr -d '\r' | tr '-' '\n' >> $GITHUB_ENV
+          echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) | tr -d '\r' >> $GITHUB_ENV
 
       - name: view commit message
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
+          sed -i 's/-/\n/g' ${{ env.COMMIT_MESSAGE_BODY }}
           echo ${{ env.COMMIT_MESSAGE_BODY }}
 
       - name: Register app version environment variable and update major version
