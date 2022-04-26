@@ -42,7 +42,7 @@ jobs:
 
       - name: commit
         run: |
-          echo ${{ COMMIT_MESSAGE }}
+          echo ${{ env.COMMIT_MESSAGE }}
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
