@@ -44,7 +44,7 @@ jobs:
         env:
           MESSAGE_BODY: $(echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g")
         run: |
-          echo NEW_MESSAGE_BODY=$MESSAGE_BODY >> $GITHUB+ENV
+          echo NEW_MESSAGE_BODY=$MESSAGE_BODY >> $GITHUB_ENV
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
