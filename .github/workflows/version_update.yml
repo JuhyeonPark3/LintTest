@@ -37,8 +37,7 @@ jobs:
       - name: view commit message
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
-          echo ${{ env.COMMIT_MESSAGE_BODY //-/\n }}
-          echo ${{ env.COMMIT_MESSAGE_BODY }}
+          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed -e "s/-/\n/g"
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
