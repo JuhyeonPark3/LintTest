@@ -35,9 +35,10 @@ jobs:
           echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) | tr -d '\r' >> $GITHUB_ENV
 
       - name: view commit message
+        id: commitMessage
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
-          echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g"
+          MESSAGE_BODY=$(echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g")
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
@@ -111,7 +112,7 @@ jobs:
         with:
           payload: |
             {
-              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n $(echo ${{ env.COMMIT_MESSAGE_BODY }} | sed "s/-/\n-/g")"
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ steps.commitMessage.MESSAGE_BDOY }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
