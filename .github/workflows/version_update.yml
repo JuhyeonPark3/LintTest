@@ -111,7 +111,7 @@ jobs:
         with:
           payload: |
             {
-              "text": >
+              "text": >+
                 "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
             }
         env:
