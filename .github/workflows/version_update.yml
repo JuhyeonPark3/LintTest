@@ -36,7 +36,6 @@ jobs:
 
       - name: view commit message
         run: |
-          tr -d '\n\r' < ${{ env.COMMIT_MESSAGE_BODY }}
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
           echo ${{ env.COMMIT_MESSAGE_BODY }} | tr -d '\r'
           echo ${ env.COMMIT_MESSAGE_BODY //'-'/'\n'}
