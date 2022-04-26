@@ -38,6 +38,7 @@ jobs:
         run: |
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
           echo ${{ env.COMMIT_MESSAGE_BODY }}
+          echo ${ env.COMMIT_MESSAGE_BODY //'-'/'\n'}
 
       - name: Register app version environment variable and update major version
         if: contains(env.COMMIT_MESSAGE_TITLE, 'major')
@@ -111,10 +112,7 @@ jobs:
         with:
           payload: |
             {
-              "text": |
-              {
-                "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
-              }
+              "text": "${{ env.COMMIT_MESSAGE_TITLE }} \n ${{ env.COMMIT_MESSAGE_BODY }}"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
