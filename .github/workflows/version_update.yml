@@ -33,11 +33,10 @@ jobs:
         run: |
           echo COMMIT_MESSAGE_TITLE=$(git log -1 --oneline --pretty=format:%s) >> $GITHUB_ENV
           echo COMMIT_MESSAGE_BODY=$(git log -1 --oneline --pretty=format:%b) >> $GITHUB_ENV
-          tr -d '\n\r' < ${{ env.COMMIT_MESSAGE_BODY }}
-          echo ${{ env.COMMIT_MESSAGE_BODY }}
 
       - name: view commit message
         run: |
+          tr -d '\n\r' < ${{ env.COMMIT_MESSAGE_BODY }}
           echo ${{ env.COMMIT_MESSAGE_TITLE }}
           echo ${{ env.COMMIT_MESSAGE_BODY }}
           echo ${ env.COMMIT_MESSAGE_BODY //'-'/'\n'}
